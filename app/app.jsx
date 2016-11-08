@@ -13,4 +13,5 @@ ReactDOM.render(
   document.getElementById('app')
 );
 
-require('./playground/redux-example.jsx');
+//require('./playground/redux-example.jsx');
+require('./redux-example.jsx');
