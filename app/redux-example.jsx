@@ -1,47 +1,58 @@
-var redux = require('redux');
+var Redux = require('redux');
 
-console.log('Redux todo starting example');
 
-var stateDefault = {
-  searchText: '',
-  showCompleted: false,
-  todos:[]
+var actions = require('./actions');
+var store = require('./store/configureStore');
+store = store.configure();
+
+
+var displayPlayers = (team, players) => {
+  if(!players) return;
+
+  return players.reduce( (lista, player) => lista+= `${player.position}: ${player.name} <br/>`, `${team} <br/>`)
 }
-// Il reducer è responsabile della computazione del nuovo stato
-var reducer = (state = stateDefault, action) => {
-  console.log('New Action', action);
-  switch(action.type){
-    case 'CHANGE_SEARCH_TEXT':
-      var {searchText} = action;
-      return {...state, searchText}
-  }
-  return state;
-};
-// Lo store si crea a partire da una funzione reducer o una combinazione di questi
-var store = redux.createStore(reducer, redux.compose(
-  // necessaria per usare il redux devTools su Chrome
-  window.devToolsExtension ? window.devToolsExtension() : f => f
-));
 
-// Subscribe: ci permette di "ascoltare" i cambiamenti
+// Reducer
+
+
 var unsubscribe = store.subscribe( () => {
   var state = store.getState();
-  document.getElementById('app').innerHTML = state.searchText;
-  console.log('currentState (subscribe)', state.searchText);
+  if (state.map.isFetching){
+    document.getElementById('app').innerHTML = 'Fetching data...';
+  } else if(state.map.url){
+    document.getElementById('app').innerHTML = `<a href=${state.map.url} target="_blank">View Your Location</a>`
+  } else {
+    document.getElementById('app').innerHTML = 'No connection!';
+  }
+
+  if(state.footballers.isFetching){
+    document.getElementById('footballers').innerHTML = 'Fetching Player data...';
+  } else if(state.footballers.players){
+
+    document.getElementById('footballers').innerHTML = displayPlayers(state.footballers.team, state.footballers.players);
+  } else {
+    document.getElementById('footballers').innerHTML = 'No results!';
+  }
 });
 
-console.log('currentState', store.getState());
+// Fetch hanno bisogno dello store. Non posso fare un require nell'index.js di actions in quanto otterrei
+// sempre un nuovo store. Devo installare un middleware: redux-thunk
 
-var action = {
-  type: 'CHANGE_SEARCH_TEXT',
-  searchText: 'prova!'
-}
-// Il metodo dispatch prende come argomento una action.
-store.dispatch(action);
-console.log('currentState', store.getState());
+store.dispatch(actions.fetchLocation());
 
-var action = {
-  type: 'CHANGE_SEARCH_TEXT',
-  searchText: 'Altra ricerca!'
-}
-store.dispatch(action);
+store.dispatch(actions.fetchPlayers(100));
+
+/*store.dispatch(actions.nameChange('Lorenzo'));
+
+store.dispatch(actions.addHobby('Running'));
+store.dispatch(actions.addHobby('Programming'));
+
+store.dispatch(actions.removeHobby(1));
+
+store.dispatch(actions.addMovie('Titolo 1','Genre 1'));
+store.dispatch(actions.addMovie('Titolo 2','Genre 2'));
+store.dispatch(actions.addMovie('Titolo 3','Genre 3'));
+
+store.dispatch(actions.removeMovie(1));
+
+console.log('store:', store.getState());*/
