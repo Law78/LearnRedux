@@ -1,12 +1,22 @@
 // JSBIN: https://jsbin.com/toyeci/edit?js,console
+https://jsbin.com/gesacay/19/edit?js,console
 
 var axios = require('axios');
 
 
 export var nameChange = (name) => {
+  /*return () => {
+
+  }*/
   return {
     type: 'CHANGE_NAME',
-    name
+    name,
+    funcAsync: function(){
+      axios.get('https://jsonplaceholder.typicode.com/posts/1')
+        .then(function(res){
+          console.log(res.data);
+      });
+    }
   };
 };
 
@@ -55,24 +65,27 @@ export var completeLocationFetch = (url) => {
 /*
 L'idea è ritornare un oggetto Action con una funzione.
 */
+/*
 export var fetchLocation = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(startLocationFetch());
     axios.get('http://ipinfo.io').then(function(res){
       var loc = res.data.loc;
       var baseURL = 'http://maps.google.com/?q='
       dispatch(completeLocationFetch(`${baseURL}${loc}`));
     });
-  }
-}
-/*export var fetchLocation = () => {
+  };
+};*/
+
+export var fetchLocation = (store) => {
   store.dispatch(startLocationFetch());
   axios.get('http://ipinfo.io').then(function(res){
     var loc = res.data.loc;
     var baseURL = 'http://maps.google.com/?q='
     store.dispatch(completeLocationFetch(`${baseURL}${loc}`));
   });
-};*/
+};
+
 
 
 export var startPlayersFetch = () => {

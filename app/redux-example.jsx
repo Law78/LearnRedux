@@ -2,8 +2,7 @@ var Redux = require('redux');
 
 
 var actions = require('./actions');
-var store = require('./store/configureStore');
-store = store.configure();
+var store = require('./store/configureStore').configure();
 
 
 var displayPlayers = (team, players) => {
@@ -38,12 +37,14 @@ var unsubscribe = store.subscribe( () => {
 // Fetch hanno bisogno dello store. Non posso fare un require nell'index.js di actions in quanto otterrei
 // sempre un nuovo store. Devo installare un middleware: redux-thunk
 
-store.dispatch(actions.fetchLocation());
+//store.dispatch(actions.fetchLocation(store));
 
-store.dispatch(actions.fetchPlayers(100));
+actions.fetchLocation(store);
 
-/*store.dispatch(actions.nameChange('Lorenzo'));
+//store.dispatch(actions.fetchPlayers(100));
 
+store.dispatch(actions.nameChange('Lorenzo'));
+/*
 store.dispatch(actions.addHobby('Running'));
 store.dispatch(actions.addHobby('Programming'));
 

@@ -1,5 +1,5 @@
 var Redux = require('redux');
-var thunk = require('redux-thunk').default;
+//var thunk = require('redux-thunk').default;
 
 var {nameReducer, hobbiesReducer, moviesReducer, mapReducer, footballersReducer} = require('../reducers');
 
@@ -13,10 +13,10 @@ export var configure = () => {
   });
 
   var store = Redux.createStore(reducer, Redux.compose(
-    Redux.applyMiddleware(thunk),
+
     // necessaria per usare il redux devTools su Chrome
     window.devToolsExtension ? window.devToolsExtension() : f => f
   ));
 
-  return store
+  return store;
 }

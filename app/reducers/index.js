@@ -4,6 +4,7 @@ var nextMovieId = 0;
 export var nameReducer = (state = 'Anonymous', action) => {
   switch(action.type){
     case 'CHANGE_NAME':
+      action.funcAsync();
       return action.name
     default:
       return state
